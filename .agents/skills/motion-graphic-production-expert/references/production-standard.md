@@ -10,12 +10,18 @@ Default design margin: 7% of canvas width on each side and 7% of height top/bott
 Scene ID | Start | End | Narration/VO | Visual | On-screen keywords | Motion/transition | Assets | Risks/notes
 
 ## Audio and subtitles
-Measure media duration using ffprobe. For alignment, prefer a supported forced-alignment/transcription tool; manually verify against actual VO. If unavailable, mark timings unverified and do not promise accurate SRT. No subtitle cue overlap; ensure cues stay within final duration. Keep VO clear and music below it, with fade in/out.
+Measure media duration using ffprobe. Prefer a supported forced-alignment or transcription tool and manually verify the timing against the actual VO. If transcription is blocked, follow the fallback order in [Environment preflight](environment-preflight.md). Record verified cue times only. For storyboard review, leave unverified VO-dependent timings pending and label them clearly.
+
+Run the SRT checker for cue structure, numbering and timestamp rules. During preview and final QA, listen to the actual audio, compare cue starts and ends to the speech, and confirm the last cue fits within the final duration. Keep VO clear and music below it, with fade in/out.
+
+## Browser provisioning
+
+Prefer Remotion's managed browser when available. If its download is blocked, use a verified local Chromium with the opt-in override in [Environment preflight](environment-preflight.md). Confirm composition discovery and a still before using it for preview. If neither browser works, report the blocker and keep the preview gate open.
 
 ## Quality gates
-- Gate A: script/VO discrepancies and storyboard approved
-- Gate B: representative previews reviewed and approved
-- Gate C: final render validated (dimensions, fps, duration, audio streams, SRT syntax)
+- Gate A requires approval of script/VO discrepancy handling and the storyboard before implementation.
+- Gate B requires review and approval of representative previews.
+- Gate C requires explicit authorization before the final render and validation of the resulting dimensions, fps, duration, audio streams, and SRT structure and sync where applicable.
 
 ## Mining visual fidelity
 For safety content, depict APD, haul roads, vehicles, equipment geometry, signage, and operating context accurately. Do not fabricate procedures, distances, speed limits, or legal requirements; flag uncertain facts for SME approval.
