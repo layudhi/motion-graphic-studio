@@ -23,6 +23,12 @@ Prefer Remotion's managed browser when available. If its download is blocked, us
 - Gate B requires review and approval of representative previews.
 - Gate C requires explicit authorization before the final render and validation of the resulting dimensions, fps, duration, audio streams, and SRT structure and sync where applicable.
 
+## TTS and visual-character checks
+- Separate **spoken script** from **performance direction**. Strip unsupported expression tags before generating speech; keep a source-to-clean-script change log. Verify actual speech by listening, not by transcription alone. If an expression tag appears in the WAV, the correct remedy is regenerated narration and renewed alignment, not simply deleting its subtitle.
+- For human figures: inspect head-to-torso proportions, shoulder and elbow articulation, hand grips, leg/foot grounding, safety glasses, hard-hat fit, high-vis reflective placement and task-specific PPE. Inspect pose continuity at intermediate frames, not only cut points.
+- A handheld infrared thermometer does not establish an internal stockpile temperature. If depicted, label it a surface/accessible-point check as applicable, and use site-approved measurement practice. Do not imply surface readings reliably exclude internal hotspots.
+- For each key character action, export a before/after still and a short motion preview. Gate B requires human review of visual storytelling as well as geometrical non-overlap.
+
 ## Mining visual fidelity
 For safety content, depict APD, haul roads, vehicles, equipment geometry, signage, and operating context accurately. Do not fabricate procedures, distances, speed limits, or legal requirements; flag uncertain facts for SME approval.
 
