@@ -124,6 +124,7 @@ const OpeningTitle = () => {
           fontSize: 193,
           lineHeight: 0.99,
           letterSpacing: -8,
+          marginTop: 12,
           color: "#F59E0B",
           opacity: interpolate(frame, [0.13 * fps, 0.63 * fps], [0.24, 1], {
             extrapolateLeft: "clamp",
