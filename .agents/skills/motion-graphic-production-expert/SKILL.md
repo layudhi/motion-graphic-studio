@@ -3,10 +3,10 @@ name: motion-graphic-production-expert
 description: End-to-end Remotion TypeScript motion graphics production from script and voice-over, with verified timing, storyboard approval, visual QA, and final MP4/SRT delivery. Use for explainer, safety awareness, educational, vertical shorts and corporate video projects.
 ---
 
-# Motion Graphic Production Expert v2.0
+# Motion Graphic Production Expert v2.1
 
 Use this skill when asked to produce a motion graphic, explainer, or safety video using Remotion. Read `references/production-standard.md` and the relevant installed Remotion official skill before writing code.
-Use `references/environment-preflight.md` to verify the renderer and speech-alignment tools before relying on them.
+Use `references/environment-preflight.md` to verify the renderer and speech-alignment tools before relying on them. Read `references/voiceover-expression-safety.md` before preparing TTS scripts, and `references/character-visual-qa.md` whenever humans or safety-critical actions appear.
 
 ## Input contract
 Ask only for missing essentials: script, VO (if it exists), format/aspect ratio, audience, and any required reference images. Do not assume absent assets exist. Never modify the source narration without approval. Verify license/permission for music, images, and fonts.
@@ -17,6 +17,11 @@ Ask only for missing essentials: script, VO (if it exists), format/aspect ratio,
 3. **Implementation**: After storyboard approval, create a Remotion TypeScript composition with deterministic frame-based animations. Keep assets under `public/` and reusable components under `src/`. Do not overwrite unrelated compositions. Use original artwork or appropriately licensed assets.
 4. **Preview and visual QA**: Render representative still frames (opening, scene transitions, longest text, subtitle, closing) and, when feasible, a low-resolution preview clip. If the managed browser download is blocked, use the preflight's verified local Chromium procedure and report any remaining blocker. Inspect for clipping, overlaps, unreadable text, missing assets, incorrect equipment or PPE, and animation/VO drift. Fix issues and report evidence. **STOP for user approval.**
 5. **Final render**: Only after explicit approval, render H.264 MP4 and UTF-8 SRT; include VO and music only when authorized assets exist. Verify actual media with ffprobe, compare audio and video duration, inspect representative frames, and report outputs.
+
+## Added production gates — TTS and character fidelity
+- Never assume angle-bracket style tags such as `<curious>`, `<serious>`, or `<explain>` are supported by a TTS engine. Keep a spoken-text-only script separate from performance directions. Confirm tags only against provider documentation or a short playback test. If any are spoken literally, stop and request regenerated VO; do not hide the words in subtitles and claim audio is fixed.
+- Confirm character anatomy, hands, PPE, equipment use, and activity accuracy with actual stills at 100% and phone scale; simple bounding-box checks alone are insufficient. If an important action cannot be depicted convincingly, prefer a close-up of tools or an instrument over a malformed human figure.
+- Before each Gate B approval, preserve all project source files in a Git branch and identify the exact commit SHA. Preview assets alone are not sufficient for recovering the composition.
 
 ## Non-negotiable requirements
 - Never claim a visual QA pass solely because TypeScript or build passed.
