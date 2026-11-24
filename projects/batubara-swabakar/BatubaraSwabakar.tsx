@@ -219,7 +219,7 @@ export const BatubaraSwabakar: React.FC<Props> = ({ showSubtitles }) => {
           <Sequence layout="none" from={71} durationInFrames={52}>
             <Keyword tone={teal}>OKSIGEN</Keyword>
           </Sequence>
-          <Sequence layout="none" from={116}>
+          <Sequence layout="none" from={124}>
             <Keyword tone={teal}>OKSIDASI</Keyword>
           </Sequence>
         </Sequence>
