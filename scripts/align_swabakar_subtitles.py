@@ -28,7 +28,8 @@ CUES = [
     ("dan sirkulasi udara buruk,\npanas ini gagal keluar", 25.90, 28.80),
     ("dan terus menumpuk di dalam.", 28.80, 30.80),
     ("Begitu mencapai titik kritis...", 31.20, 32.85),
-    ("Boom! Api menyala\ndengan sendirinya!", 32.85, 34.80),
+    # The replacement WAV ASR detects "Boom! Api!" and omits the scripted continuation.
+    ("Boom! Api!", 32.85, 34.15),
     ("Itulah mengapa di dunia tambang,", 35.20, 37.05),
     ("manajemen tinggi timbunan\ndan pemadatan rutin", 37.05, 39.30),
     ("wajib dilakukan untuk\nmencegah bencana.", 39.30, 41.55),
