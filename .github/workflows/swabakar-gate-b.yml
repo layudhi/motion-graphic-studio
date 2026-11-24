@@ -1,0 +1,51 @@
+name: Swabakar Gate B visual and audio preflight
+on:
+  pull_request:
+    paths:
+      - "projects/batubara-swabakar/**"
+      - "public/audio/VO_Batubara_Swabakar.wav"
+      - "src/Root.tsx"
+      - "scripts/inspect_swabakar_wav.py"
+      - ".github/workflows/swabakar-gate-b.yml"
+  workflow_dispatch:
+jobs:
+  validate-and-preview:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: TypeScript validation
+        run: npx tsc --noEmit
+      - name: Check modified Remotion code
+        run: npx eslint projects/batubara-swabakar/MonitoringScenes.tsx
+      - name: Inspect actual replacement voice-over
+        run: |
+          python3 scripts/inspect_swabakar_wav.py | tee vo-metadata.txt
+      - name: Render worker preview stills (not final output)
+        run: |
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo "No system Chrome available; Remotion will try its managed browser."
+            BROWSER_ARGS=()
+          else
+            echo "Using browser: $CHROME"
+            BROWSER_ARGS=("--browser-executable=$CHROME")
+          fi
+          mkdir -p gate-b-preview
+          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1200.png --frame=1200 "${BROWSER_ARGS[@]}"
+          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1254.png --frame=1254 "${BROWSER_ARGS[@]}"
+          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1297.png --frame=1297 "${BROWSER_ARGS[@]}"
+          cp vo-metadata.txt gate-b-preview/vo-metadata.txt
+      - name: Upload Gate B images for human review
+        uses: actions/upload-artifact@v4
+        with:
+          name: swabakar-worker-revision-gate-b
+          path: gate-b-preview/
+          if-no-files-found: warn
