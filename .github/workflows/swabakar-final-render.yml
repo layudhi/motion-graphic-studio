@@ -56,6 +56,8 @@ jobs:
       - name: Verify media
         shell: bash
         run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
           ffprobe -v error -show_format -show_streams -of json final-deliverables/BatubaraSwabakar_Final.mp4 > final-deliverables/media-probe.json
           python -c 'import json; d=json.load(open("final-deliverables/media-probe.json")); s=d["streams"]; v=next(x for x in s if x["codec_type"]=="video"); assert v["width"]==1080 and v["height"]==1920 and v["codec_name"]=="h264" and v["avg_frame_rate"]=="30/1"; assert any(x["codec_type"]=="audio" for x in s), "Missing VO track"; dur=float(d["format"]["duration"]); assert 41.30<dur<41.55, dur; print("PASS",dur)'
       - name: Upload final video, SRT and QA evidence
