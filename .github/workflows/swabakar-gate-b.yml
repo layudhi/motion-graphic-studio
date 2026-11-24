@@ -43,6 +43,8 @@ jobs:
           npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1185.png --frame=1185 "${BROWSER_ARGS[@]}"
           npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1216.png --frame=1216 "${BROWSER_ARGS[@]}"
           npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1237.png --frame=1237 "${BROWSER_ARGS[@]}"
+          # Gate B motion study only (five seconds, 360x640), NOT the final video.
+          npx remotion render src/index.ts BatubaraSwabakar gate-b-preview/worker-action-preview.mp4 --codec=h264 --frames=1100-1240 --scale=0.333333 "${BROWSER_ARGS[@]}"
           cp vo-metadata.txt gate-b-preview/vo-metadata.txt
       - name: Upload Gate B images for human review
         uses: actions/upload-artifact@v4
