@@ -24,7 +24,7 @@ export const RemotionRoot: React.FC = () => {
         width={1080}
         height={1920}
         fps={30}
-        durationInFrames={1317}
+        durationInFrames={1241}
         schema={batubaraSwabakarSchema}
         defaultProps={{ showSubtitles: false }}
       />

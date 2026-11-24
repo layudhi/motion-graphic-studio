@@ -14,8 +14,8 @@ import {
 } from "remotion";
 import { z } from "zod";
 import { MonitoringScenes } from "./MonitoringScenes";
+import alignedCaptions from "./subtitles.final.json";
 import { StockpileScenes } from "./StockpileScenes";
-import captions from "./subtitles.provisional.json";
 
 const bone = "#F1E8D5";
 const amber = "#F5A33B";
@@ -24,7 +24,7 @@ const titleFont = "Swabakar Barlow Condensed";
 const subtitleFont = "Swabakar Barlow";
 
 export const batubaraSwabakarSchema = z.object({
-  showSubtitles: z.boolean().describe("Tampilkan subtitle sementara"),
+  showSubtitles: z.boolean().describe("Tampilkan subtitle VO baru (timing dari alignment otomatis)"),
 });
 
 type Props = z.infer<typeof batubaraSwabakarSchema>;
@@ -90,37 +90,33 @@ const Keyword: React.FC<KeywordProps> = ({
   );
 };
 
+// The current captions use automatic speech alignment against the 41.36s WAV.
+// Separate SRT is recommended for platforms with accessible subtitle controls.
 const Subtitle: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const timeMs = (1000 * frame) / fps;
-  const caption = captions.find(
-    ({ startMs, endMs }) => startMs <= timeMs && timeMs < endMs,
+  const ms = (frame * 1000) / fps;
+  const caption = alignedCaptions.find(({ startMs, endMs }) =>
+    ms >= startMs && ms < endMs,
   );
-
-  if (!caption) {
-    return null;
-  }
-
+  if (!caption) return null;
   return (
     <div
+      data-qa-role="subtitle"
       style={{
         position: "absolute",
         left: 88,
-        right: 180,
-        bottom: 415,
+        right: 88,
+        bottom: 414,
         display: "flex",
         justifyContent: "center",
+        pointerEvents: "none",
       }}
     >
       <div
-        data-qa-role="subtitle"
         style={{
-          padding: "12px 22px 14px",
-          maxWidth: 812,
-          boxSizing: "border-box",
-          borderRadius: 12,
-          backgroundColor: "rgba(15, 15, 13, 0.90)",
+          maxWidth: 820,
+          padding: "7px 12px",
           color: bone,
           fontFamily: `"${subtitleFont}", sans-serif`,
           fontSize: 44,
@@ -128,6 +124,7 @@ const Subtitle: React.FC = () => {
           lineHeight: 1.14,
           textAlign: "center",
           whiteSpace: "pre-line",
+          textShadow: "0 3px 7px #111, 0 0 12px #111",
         }}
       >
         {caption.text}
@@ -136,13 +133,21 @@ const Subtitle: React.FC = () => {
   );
 };
 
-const Illustration: React.FC<{ readonly start: number }> = ({ start }) => {
+// Retiming for the 41.36s replacement VO is *visual-only and provisional*.
+// Keep the previously approved drawing motion while revising scene boundaries.
+// This is not a substitute for sentence-level forced alignment against new WAV.
+const Illustration: React.FC<{
+  readonly oldStart: number;
+  readonly oldEnd: number;
+  readonly duration: number;
+}> = ({ oldStart, oldEnd, duration }) => {
   const localFrame = useCurrentFrame();
-  const frame = start + localFrame;
+  const ratio = Math.min(localFrame, duration - 1) / Math.max(1, duration - 1);
+  const frame = oldStart + Math.round(ratio * (oldEnd - oldStart - 1));
 
   return (
     <>
-      {start < 1038 ? (
+      {frame < 1038 ? (
         <StockpileScenes frame={frame} />
       ) : (
         <MonitoringScenes frame={frame} />
@@ -185,67 +190,67 @@ export const BatubaraSwabakar: React.FC<Props> = ({ showSubtitles }) => {
     <AbsoluteFill style={{ backgroundColor: "#191A18", overflow: "hidden" }}>
       <Track name="Adegan">
         <Sequence name="Panas tersembunyi" durationInFrames={90}>
-          <Illustration start={0} />
+          <Illustration oldStart={0} oldEnd={90} duration={90} />
           <Sequence layout="none" from={47}>
             <Keyword size={118} accentLastLine>
               {"PANAS\nTERSEMBUNYI"}
             </Keyword>
           </Sequence>
         </Sequence>
-        <Sequence name="Tanpa pemantik" from={90} durationInFrames={201}>
-          <Illustration start={90} />
-          <Sequence layout="none" from={96}>
+        <Sequence name="Tanpa pemantik" from={90} durationInFrames={188}>
+          <Illustration oldStart={90} oldEnd={291} duration={188} />
+          <Sequence layout="none" from={90}>
             <Keyword size={92}>TANPA PEMANTIK</Keyword>
           </Sequence>
         </Sequence>
-        <Sequence name="Nama proses" from={291} durationInFrames={189}>
-          <Illustration start={291} />
-          <Sequence layout="none" from={95}>
+        <Sequence name="Nama proses" from={278} durationInFrames={178}>
+          <Illustration oldStart={291} oldEnd={480} duration={178} />
+          <Sequence layout="none" from={90}>
             <Keyword size={120}>SWABAKAR</Keyword>
           </Sequence>
         </Sequence>
-        <Sequence name="Oksidasi" from={480} durationInFrames={201}>
-          <Illustration start={480} />
-          <Sequence layout="none" from={76} durationInFrames={56}>
+        <Sequence name="Oksidasi" from={456} durationInFrames={188}>
+          <Illustration oldStart={480} oldEnd={681} duration={188} />
+          <Sequence layout="none" from={71} durationInFrames={52}>
             <Keyword tone={teal}>OKSIGEN</Keyword>
           </Sequence>
-          <Sequence layout="none" from={132}>
+          <Sequence layout="none" from={124}>
             <Keyword tone={teal}>OKSIDASI</Keyword>
           </Sequence>
         </Sequence>
-        <Sequence name="Panas menumpuk" from={681} durationInFrames={249}>
-          <Illustration start={681} />
-          <Sequence layout="none" from={64}>
+        <Sequence name="Panas menumpuk" from={644} durationInFrames={234}>
+          <Illustration oldStart={681} oldEnd={930} duration={234} />
+          <Sequence layout="none" from={60}>
             <Keyword size={96} tone={amber}>
               PANAS MENUMPUK
             </Keyword>
           </Sequence>
         </Sequence>
-        <Sequence name="Risiko kebakaran" from={930} durationInFrames={108}>
-          <Illustration start={930} />
+        <Sequence name="Risiko kebakaran" from={878} durationInFrames={101}>
+          <Illustration oldStart={930} oldEnd={1038} duration={101} />
           <Keyword size={92} tone={amber}>
             RISIKO KEBAKARAN
           </Keyword>
         </Sequence>
         <Sequence
           name="Pengelolaan dan pemantauan"
-          from={1038}
-          durationInFrames={216}
+          from={979}
+          durationInFrames={203}
         >
-          <Illustration start={1038} />
-          <Sequence layout="none" from={19} durationInFrames={105}>
+          <Illustration oldStart={1038} oldEnd={1254} duration={203} />
+          <Sequence layout="none" from={18} durationInFrames={99}>
             <Keyword size={92}>KELOLA TIMBUNAN</Keyword>
           </Sequence>
           <Sequence layout="none" from={124}>
             <Keyword tone={teal}>PANTAU SUHU</Keyword>
           </Sequence>
         </Sequence>
-        <Sequence name="Laporan" from={1254} durationInFrames={63}>
-          <Illustration start={1254} />
+        <Sequence name="Laporan" from={1182} durationInFrames={59}>
+          <Illustration oldStart={1254} oldEnd={1317} duration={59} />
           <Keyword tone={teal} enter={false}>
             PANTAU SUHU
           </Keyword>
-          <Sequence layout="none" from={12}>
+          <Sequence layout="none" from={11}>
             <Keyword size={94} tone={amber} top={329}>
               LAPORKAN
             </Keyword>
