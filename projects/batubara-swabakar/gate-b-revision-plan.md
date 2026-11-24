@@ -22,3 +22,12 @@ On contact-sheet frames 1200, 1285, and 1316, the worker is an overly simplified
 - Before/after stills at matching scene points, animation preview of the actual worker in motion, text-safe-area review and human visual sign-off.
 - Updated duration, timecoded storyboard/subtitles and listening QA based on the new WAV.
 - No final MP4 until explicit approval.
+
+## Revision implementation — 2026-11-24 (ChatGPT/GitHub)
+- GitHub PR #7 preserved the actual TypeScript source on `main`, including the Root registration.
+- PR #8 updates `MonitoringScenes.tsx`: worker anatomical detail, connected arm pose, inspection with an infrared surface thermometer, separate radio-reporting action, and a compact non-numeric temperature trend. This is an artistic illustration, **not** a verified field measurement method.
+- GitHub Actions successfully measured the replacement WAV: **41.360000 seconds**, mono 24 kHz/16-bit, 992,640 audio frames; an exact 30 fps canvas uses **1241 video frames / 41.366667 seconds**. The prior 43.880s/1317-frame timeline is no longer valid.
+- `BatubaraSwabakar.tsx` now maps the eight prior illustration scenes to the 1241-frame timeline provisionally, retaining the 3-second opening; `src/Root.tsx` registers 1241 frames.
+- **Critical remaining blocker:** old `subtitles.provisional.json` still contains the phrases `Curious.` and `Serius.` from the old WAV. These timings must not be delivered as verified subtitles. A listening review and new forced alignment of the corrected WAV are still required. The user-facing default remains `showSubtitles=false`.
+- Gate B still requires human review of revised frame previews and a short motion segment. Passing TypeScript, lint and screenshot rendering alone is insufficient.
+- Gate C final video/SRT remains unauthorized.
