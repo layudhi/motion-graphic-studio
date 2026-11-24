@@ -10,9 +10,11 @@ import {
   Track,
   useCurrentFrame,
   useDelayRender,
+  useVideoConfig,
 } from "remotion";
 import { z } from "zod";
 import { MonitoringScenes } from "./MonitoringScenes";
+import alignedCaptions from "./subtitles.final.json";
 import { StockpileScenes } from "./StockpileScenes";
 
 const bone = "#F1E8D5";
@@ -22,7 +24,7 @@ const titleFont = "Swabakar Barlow Condensed";
 const subtitleFont = "Swabakar Barlow";
 
 export const batubaraSwabakarSchema = z.object({
-  showSubtitles: z.boolean().describe("Subtitle dari WAV LAMA: belum sinkron dengan VO baru, jangan untuk final"),
+  showSubtitles: z.boolean().describe("Tampilkan subtitle VO baru (timing dari alignment otomatis)"),
 });
 
 type Props = z.infer<typeof batubaraSwabakarSchema>;
@@ -88,30 +90,48 @@ const Keyword: React.FC<KeywordProps> = ({
   );
 };
 
-// The existing SRT/JSON cues were aligned to a DIFFERENT 43.88s WAV.
-// Deliberately do not display them with the corrected 41.36s recording.
-// The user may request showSubtitles during preview to see this explicit block.
-const Subtitle: React.FC = () => (
-  <div
-    data-qa-role="subtitle-alignment-pending"
-    style={{
-      position: "absolute",
-      left: 110,
-      right: 110,
-      bottom: 432,
-      textAlign: "center",
-      background: "rgba(12, 16, 14, 0.80)",
-      color: "#F1E8D5",
-      borderRadius: 12,
-      padding: "12px 18px",
-      fontSize: 31,
-      fontFamily: "sans-serif",
-      lineHeight: 1.25,
-    }}
-  >
-    SUBTITLE MENUNGGU SINKRONISASI VO BARU
-  </div>
-);
+// The current captions use automatic speech alignment against the 41.36s WAV.
+// Separate SRT is recommended for platforms with accessible subtitle controls.
+const Subtitle: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const ms = (frame * 1000) / fps;
+  const caption = alignedCaptions.find(({ startMs, endMs }) =>
+    ms >= startMs && ms < endMs,
+  );
+  if (!caption) return null;
+  return (
+    <div
+      data-qa-role="subtitle"
+      style={{
+        position: "absolute",
+        left: 88,
+        right: 88,
+        bottom: 414,
+        display: "flex",
+        justifyContent: "center",
+        pointerEvents: "none",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 820,
+          padding: "7px 12px",
+          color: bone,
+          fontFamily: `"${subtitleFont}", sans-serif`,
+          fontSize: 44,
+          fontWeight: 600,
+          lineHeight: 1.14,
+          textAlign: "center",
+          whiteSpace: "pre-line",
+          textShadow: "0 3px 7px #111, 0 0 12px #111",
+        }}
+      >
+        {caption.text}
+      </div>
+    </div>
+  );
+};
 
 // Retiming for the 41.36s replacement VO is *visual-only and provisional*.
 // Keep the previously approved drawing motion while revising scene boundaries.
