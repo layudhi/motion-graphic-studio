@@ -10,14 +10,10 @@ import {
   Track,
   useCurrentFrame,
   useDelayRender,
-  useVideoConfig,
 } from "remotion";
 import { z } from "zod";
 import { MonitoringScenes } from "./MonitoringScenes";
 import { StockpileScenes } from "./StockpileScenes";
-// WARNING: these 18 captions belong to the previous 43.88s WAV.
-// They remain for historical comparison only until the replacement VO is aligned.
-import captions from "./subtitles.provisional.json";
 
 const bone = "#F1E8D5";
 const amber = "#F5A33B";
@@ -92,51 +88,30 @@ const Keyword: React.FC<KeywordProps> = ({
   );
 };
 
-const Subtitle: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const timeMs = (1000 * frame) / fps;
-  const caption = captions.find(
-    ({ startMs, endMs }) => startMs <= timeMs && timeMs < endMs,
-  );
-
-  if (!caption) {
-    return null;
-  }
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: 88,
-        right: 180,
-        bottom: 415,
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        data-qa-role="subtitle"
-        style={{
-          padding: "12px 22px 14px",
-          maxWidth: 812,
-          boxSizing: "border-box",
-          borderRadius: 12,
-          backgroundColor: "rgba(15, 15, 13, 0.90)",
-          color: bone,
-          fontFamily: `"${subtitleFont}", sans-serif`,
-          fontSize: 44,
-          fontWeight: 600,
-          lineHeight: 1.14,
-          textAlign: "center",
-          whiteSpace: "pre-line",
-        }}
-      >
-        {caption.text}
-      </div>
-    </div>
-  );
-};
+// The existing SRT/JSON cues were aligned to a DIFFERENT 43.88s WAV.
+// Deliberately do not display them with the corrected 41.36s recording.
+// The user may request showSubtitles during preview to see this explicit block.
+const Subtitle: React.FC = () => (
+  <div
+    data-qa-role="subtitle-alignment-pending"
+    style={{
+      position: "absolute",
+      left: 110,
+      right: 110,
+      bottom: 432,
+      textAlign: "center",
+      background: "rgba(12, 16, 14, 0.80)",
+      color: "#F1E8D5",
+      borderRadius: 12,
+      padding: "12px 18px",
+      fontSize: 31,
+      fontFamily: "sans-serif",
+      lineHeight: 1.25,
+    }}
+  >
+    SUBTITLE MENUNGGU SINKRONISASI VO BARU
+  </div>
+);
 
 // Retiming for the 41.36s replacement VO is *visual-only and provisional*.
 // Keep the previously approved drawing motion while revising scene boundaries.
