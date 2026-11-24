@@ -273,432 +273,156 @@ const RoutineStockpile: FC<{ frame: number }> = ({ frame }) => {
   );
 };
 
-const MonitoringScreen: FC<{ frame: number }> = ({ frame }) => {
-  const draw = interpolate(frame, [1163, 1217], [0, 1], {
-    ...clamp,
-    easing: ease,
-  });
-  const anomaly = interpolate(frame, [1210, 1231], [0, 1], {
-    ...clamp,
-    easing: ease,
-  });
 
+/**
+ * Human-focused Gate B revision.
+ * The temperature indicator is explicitly a surface/accessible-point illustration,
+ * not a claim that a single reading establishes the internal coal temperature.
+ */
+const SurfaceTemperatureCard: FC<{ frame: number }> = ({ frame }) => {
+  const appears = interpolate(frame, [1178, 1195, 1250, 1268], [0, 1, 1, 0.18], clamp);
+  const progress = interpolate(frame, [1192, 1227], [0, 1], clamp);
   return (
-    <g transform="translate(447 857)">
-      <path
-        d="M141 209H271L291 345H118Z"
-        fill="#242821"
-        stroke="#4A5243"
-        strokeWidth="3"
-      />
-      <path d="M195 215H233L235 340H191Z" fill="#121714" />
-      <path
-        d="M102 344H310L330 366H80Z"
-        fill="#394238"
-        stroke="#6D715A"
-        strokeWidth="2"
-      />
-      <rect
-        x="-4"
-        y="9"
-        width="427"
-        height="248"
-        rx="31"
-        fill="#101310"
-        stroke="#67766A"
-        strokeWidth="3"
-      />
-      <path
-        d="M9 235V35Q9 16 28 16H386Q409 16 409 38"
-        fill="none"
-        stroke="#A0A789"
-        strokeWidth="2"
-        opacity=".47"
-      />
-      <rect
-        x="13"
-        y="27"
-        width="387"
-        height="201"
-        rx="15"
-        fill="url(#swabakar-work-monitor)"
-        stroke="#394B43"
-        strokeWidth="2"
-      />
-      <path
-        d="M98 59V190H365M98 107H365M98 148H365M172 62V189M237 62V189M304 62V189M365 62V190"
-        fill="none"
-        stroke={teal}
-        strokeWidth="1.5"
-        opacity=".24"
-      />
-      <path
-        d="M48 128V86a8 8 0 0 1 16 0v42a15 15 0 1 1-16 0Z"
-        fill="none"
-        stroke={teal}
-        strokeWidth="3"
-        opacity=".82"
-      />
-      <path
-        d="M56 100V142"
-        fill="none"
-        stroke={teal}
-        strokeWidth="4"
-        strokeLinecap="round"
-        opacity=".82"
-      />
-      <circle cx="56" cy="142" r="6" fill={teal} />
-      <path
-        d="M105 169 137 157 172 162 207 135 240 143 270 130 301 108 333 116 357 79"
-        fill="none"
-        stroke={teal}
-        strokeWidth="5"
-        strokeLinejoin="round"
-        strokeLinecap="round"
-        pathLength={1}
-        strokeDasharray={`${draw} 1`}
-        opacity={draw > 0 ? 1 : 0}
-      />
-      <g opacity={anomaly}>
-        <path
-          d="M301 108 333 116 357 79"
-          fill="none"
-          stroke={amber}
-          strokeWidth="5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle
-          cx="357"
-          cy="79"
-          r={11 + 5 * anomaly}
-          fill={amber}
-          opacity=".15"
-        />
-        <circle cx="357" cy="79" r="5.5" fill={amber} />
+    <g transform="translate(690 728)" opacity={appears}>
+      <rect x="0" y="0" width="298" height="150" rx="20" fill="#182723" fillOpacity=".95" stroke="#6F9381" strokeWidth="3"/>
+      <path d="M24 46H274" stroke="#55796D" strokeOpacity=".45" strokeWidth="2"/>
+      <text x="24" y="30" fontFamily="sans-serif" fontSize="19" fontWeight="700" letterSpacing="1.3" fill="#D5EDE2">
+        CEK SUHU PERMUKAAN
+      </text>
+      <g transform="translate(25 65)">
+        <path d="M0 50H247M0 25H247M0 0H247" fill="none" stroke="#68857A" strokeWidth="1.5" opacity=".35"/>
+        <path d="M0 44 44 40 78 42 120 32 151 34 189 17 241 11"
+          fill="none" stroke={teal} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"
+          pathLength={1} strokeDasharray={`${progress} 1`} />
+        <circle cx="241" cy="11" r="8" fill={amber} opacity={progress}/>
       </g>
-      <path
-        d="M32 199H80M38 205H74"
-        fill="none"
-        stroke="#64756B"
-        strokeWidth="2.5"
-        opacity=".6"
-      />
-      <circle cx="375" cy="243" r="3.5" fill={teal} opacity=".8" />
-      <path
-        d="M310 244H351"
-        stroke="#687169"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeDasharray="4 4"
-        opacity=".52"
-      />
     </g>
   );
 };
 
-const Worker: FC<{ frame: number }> = ({ frame }) => {
-  const lift = interpolate(frame, [1229, 1268], [0, 1], {
-    ...clamp,
-    easing: ease,
-  });
-  const signal = interpolate(frame, [1258, 1274, 1291], [0, 0.9, 0.49], clamp);
-  const gaze = interpolate(
-    frame,
-    [1188, 1210, 1240, 1268],
-    [0, 3, 3, 0],
-    clamp,
-  );
-  const handX = 159 + 86 * lift;
-  const handY = 333 - 135 * lift;
-  const elbowX = 199 + 34 * lift;
-  const elbowY = 397 - 82 * lift;
+const MinerWorker: FC<{ frame: number }> = ({ frame }) => {
+  // A single connected shoulder-elbow-hand chain changes the action
+  // from an infrared thermometer check to speaking into a radio.
+  const report = interpolate(frame, [1252, 1280], [0, 1], {...clamp, easing: ease});
+  const handX = 420 - 129 * report;
+  const handY = 304 - 150 * report;
+  const elbowX = 354 - 28 * report;
+  const elbowY = 312 - 64 * report;
+  const breathing = Math.sin(frame / 16) * 1.6;
+  const radioSignal = interpolate(frame, [1271, 1281, 1293, 1314], [0, 0.9, 0.65, 0], clamp);
 
   return (
-    <g transform="translate(131 723)">
-      <path
-        d="M10 509 22 389 31 308 51 278 97 270 113 238 174 225 184 269 238 287 266 339 271 507Z"
-        fill="#3B5148"
-        stroke="#1D2820"
-        strokeWidth="5"
-      />
-      <path
-        d="M97 270 117 213 170 214 185 267 160 291 129 297Z"
-        fill="#A56746"
-      />
-      <path
-        d="M102 261 118 224 160 224 175 257 151 272 124 279Z"
-        fill="#764B37"
-      />
-      <path
-        d="M94 126 132 103 178 113 204 139 204 151 220 169 215 180 202 184 203 204 191 228 164 242 130 222 110 204 87 179Z"
-        fill="#BC8055"
-        stroke="#38281E"
-        strokeWidth="4"
-      />
-      <path
-        d="M103 161 127 138 142 141 150 180 167 216 164 240 130 222 114 203 90 173Z"
-        fill="#966045"
-      />
-      <path
-        d="M178 131 197 145 202 157 217 169 214 177 198 183 195 198 190 216 172 228"
-        fill="none"
-        stroke="#E2A06F"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M192 195 203 192"
-        fill="none"
-        stroke="#55382C"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M174 163 185 164"
-        transform={`translate(0 ${gaze})`}
-        fill="none"
-        stroke="#322623"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M157 149 201 148 211 155 202 172 166 173 156 163Z"
-        fill="#ADB8A3"
-        fillOpacity=".28"
-        stroke="#B9C4AA"
-        strokeWidth="3"
-      />
-      <path
-        d="M158 153 123 146M186 151 174 168"
-        fill="none"
-        stroke="#D5D8AE"
-        strokeWidth="2"
-        opacity=".63"
-      />
-      <path
-        d="M85 133Q82 109 102 89L134 78 177 78 204 92 219 118 209 132 140 143 95 145Z"
-        fill="#C99149"
-        stroke="#483323"
-        strokeWidth="4"
-      />
-      <path
-        d="M101 126 110 104 140 85 169 84 198 96 210 113 177 112 136 125Z"
-        fill="#E0AA5F"
-      />
-      <path
-        d="M134 120 144 95 155 80 170 80 159 95 149 117"
-        fill="#F3BD71"
-        opacity=".65"
-      />
-      <path
-        d="M86 132 112 131 183 119 221 117 237 124 226 133 186 137 131 149 92 148Z"
-        fill="#F2BA6A"
-        stroke="#6F4D32"
-        strokeWidth="3"
-      />
-      <path
-        d="M100 145 120 146 131 158 128 179 113 188 95 181 89 164Z"
-        fill="#2C382F"
-        stroke="#798473"
-        strokeWidth="3"
-      />
-      <path
-        d="M106 152 117 153 126 165 122 176 112 181 101 174 99 163Z"
-        fill="#3D4537"
-      />
-      <path
-        d="M100 186 120 204 132 215"
-        fill="none"
-        stroke="#464438"
-        strokeWidth="5"
-        strokeLinecap="round"
-      />
-      <path
-        d="M92 271 123 302 149 306 174 283 184 268 208 279 188 312 173 324 122 324 83 287Z"
-        fill="#27382F"
-        stroke="#52685A"
-        strokeWidth="2.5"
-      />
-      <path
-        d="M53 278 87 271 116 328 119 495 96 519H36L46 375Z"
-        fill="#BD7837"
-      />
-      <path
-        d="M183 267 208 275 232 308 242 399 236 521H172L161 470 170 345Z"
-        fill="#C7833A"
-      />
-      <path
-        d="M58 279 74 275 101 336 107 507H88L82 349ZM190 278 203 291 214 335 213 503H194L196 337Z"
-        fill="#D8DAC0"
-        opacity=".81"
-      />
-      <path
-        d="M43 422 111 419M166 423 239 425M40 448 115 446M165 447 239 451"
-        fill="none"
-        stroke="#D2D6BB"
-        strokeWidth="13"
-        opacity=".8"
-      />
-      <path
-        d="M118 344 137 353 158 342M138 353V485"
-        fill="none"
-        stroke="#6B7B61"
-        strokeWidth="2.5"
-      />
-      <path
-        d="M31 309 18 349 19 412 33 445 80 467 102 439 73 417 63 358Z"
-        fill="#3E5146"
-        stroke="#293C31"
-        strokeWidth="5"
-      />
-      <path
-        d="M24 403 39 431 77 450"
-        fill="none"
-        stroke="#667962"
-        strokeWidth="3.5"
-        opacity=".6"
-      />
-      <path
-        d="M71 435 89 438 122 451 132 463 121 477 103 473 78 461Z"
-        fill="#758172"
-        stroke="#34453A"
-        strokeWidth="3"
-      />
-      <path d="M24 508H253L272 538H5Z" fill="#1C251D" opacity=".88" />
-      <path
-        d={`M220 304Q249 338 ${elbowX} ${elbowY}Q${elbowX - 24} ${elbowY + 23} ${handX} ${handY + 14}`}
-        fill="none"
-        stroke="#253831"
-        strokeWidth="49"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d={`M218 304Q244 338 ${elbowX} ${elbowY}Q${elbowX - 24} ${elbowY + 23} ${handX} ${handY + 14}`}
-        fill="none"
-        stroke="#516458"
-        strokeWidth="35"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <g transform={`translate(${handX} ${handY}) rotate(${-15 + 24 * lift})`}>
-        <path
-          d="M-11-41H17Q23-41 23-33V7Q23 17 14 17H-11Q-18 17-18 10V-35Q-18-41-11-41Z"
-          fill="#171E17"
-          stroke="#8D9A82"
-          strokeWidth="2.7"
-        />
-        <path
-          d="M10-43V-71Q10-74 14-74Q17-74 17-70V-43"
-          fill="#1C251D"
-          stroke="#7D826B"
-          strokeWidth="2"
-        />
-        <rect x="-9" y="-29" width="23" height="10" rx="2" fill="#75A293" />
-        <path
-          d="M-7-11H11M-7-6H11M-7-1H11"
-          fill="none"
-          stroke="#68776B"
-          strokeWidth="2.5"
-        />
-        <circle
-          cx="14"
-          cy="-35"
-          r="2.6"
-          fill={signal > 0.2 ? teal : "#7A8172"}
-        />
-        <path
-          d="M-19-1-8-8 0-4-5 1 12 3 17 9 11 18-6 22-19 16-24 9Z"
-          fill="#8A9382"
-          stroke="#34463B"
-          strokeWidth="2.5"
-        />
-        <path
-          d="M-8 6 11 10M-8 12 9 15"
-          fill="none"
-          stroke="#59675B"
-          strokeWidth="1.8"
-        />
-        <g
-          fill="none"
-          stroke={teal}
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          opacity={signal}
-        >
-          <path d="M29-71Q36-63 29-53M36-77Q49-64 37-47" />
+    <g transform={`translate(100 ${706 + breathing})`}>
+      {/* Grounded boots and two trouser legs, instead of a floating torso. */}
+      <ellipse cx="225" cy="584" rx="186" ry="22" fill="#10140F" opacity=".53"/>
+      <path d="M157 384 213 391 207 532 179 554 146 535Z" fill="#33433B" stroke="#182921" strokeWidth="5"/>
+      <path d="M220 391 278 381 286 535 255 553 223 530Z" fill="#2C4137" stroke="#182921" strokeWidth="5"/>
+      <path d="M150 500H211M223 502H283" stroke="#AAB6A1" strokeWidth="12" opacity=".68"/>
+      <path d="M143 523 182 535 204 528 207 556 192 577 127 577 127 554Z" fill="#202620" stroke="#819080" strokeWidth="3"/>
+      <path d="M226 530 258 536 283 522 304 555 300 579H228L215 563Z" fill="#202620" stroke="#819080" strokeWidth="3"/>
+      <path d="M129 567H203M232 570H299" stroke="#111B16" strokeWidth="8" strokeLinecap="round"/>
+
+      {/* Neck, asymmetric natural shoulders, and semi-realistic torso. */}
+      <path d="M183 195 180 240 234 255 246 215 236 184Z" fill="#A57657"/>
+      <path d="M148 226Q174 213 195 213L229 223 254 219Q283 222 300 244L313 382 281 417 151 418 129 384 127 279Q128 244 148 226Z"
+        fill="#344E43" stroke="#1C2F28" strokeWidth="5"/>
+      <path d="M166 236 195 263 229 265 260 232 270 255 246 297 194 297 151 261Z" fill="#213D35"/>
+      <path d="M146 225 176 218 197 277 210 406 151 406 133 271Z" fill="#BF7C39"/>
+      <path d="M257 224 275 231 298 281 293 402 236 413 232 286Z" fill="#D08A42"/>
+      <path d="M153 237 165 232 196 287 204 398 186 397 179 284Z" fill="#F0E8C8" opacity=".92"/>
+      <path d="M262 237 275 247 267 290 261 397 244 400 248 286Z" fill="#F0E8C8" opacity=".92"/>
+      <path d="M150 346 204 346M245 345 294 344M151 368 203 369M245 368 292 369"
+        stroke="#DDE2C8" strokeWidth="12" opacity=".83" />
+      <path d="M216 293V402M193 293 214 304 235 293" stroke="#91A391" strokeWidth="3" fill="none"/>
+      <path d="M153 407Q218 418 286 406" stroke="#17271F" strokeWidth="9" fill="none"/>
+
+      {/* Head: jaw/ear/nose contours with aligned safety eyewear and hard hat. */}
+      <path d="M174 106Q180 76 212 68Q245 69 258 96L266 132 278 149 268 157 265 187Q259 207 235 218L204 212Q177 199 170 174Z"
+        fill="#B98260" stroke="#513827" strokeWidth="4"/>
+      <path d="M182 111Q193 91 212 89L218 177 202 199 180 178Z" fill="#915E45" opacity=".46"/>
+      <path d="M260 133 278 148 266 158 256 154" fill="#D7A078"/>
+      <path d="M244 184Q252 186 260 181" stroke="#654733" strokeWidth="3" strokeLinecap="round" fill="none"/>
+      <path d="M241 145 255 146" stroke="#342D25" strokeWidth="3.5" strokeLinecap="round"/>
+      <path d="M177 143Q170 134 168 146L175 169Q181 175 187 163" fill="#AA7558" stroke="#604330" strokeWidth="3"/>
+      <path d="M224 132 261 130 265 146 245 153 222 147Z"
+        fill="#B9D0C7" fillOpacity=".3" stroke="#D3D9CD" strokeWidth="3"/>
+      <path d="M217 136 183 133M243 137 252 148" stroke="#D4DDD0" strokeWidth="2" opacity=".74"/>
+      <path d="M175 110V94Q176 55 213 45Q249 48 268 83L269 110 247 118 201 123Z" fill="#D69B53" stroke="#594127" strokeWidth="4"/>
+      <path d="M187 98 197 69 217 54 236 63 247 96Z" fill="#F6BC69" opacity=".78"/>
+      <path d="M169 109Q207 112 249 100L287 104 285 118 247 121 196 131 166 120Z"
+        fill="#EFC07B" stroke="#6A4A2F" strokeWidth="3"/>
+      <path d="M178 135Q165 135 165 151L177 175" stroke="#2B3E36" strokeWidth="7" fill="none" />
+      <path d="M177 166Q178 197 204 213" fill="none" stroke="#435A50" strokeWidth="5"/>
+
+      {/* Left arm relaxed, weight-bearing at the hip. */}
+      <path d="M145 259Q126 278 122 326L120 383Q128 408 153 409L179 384"
+        fill="none" stroke="#253B33" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M140 277Q130 324 139 377" fill="none" stroke="#536F61" strokeWidth="27" strokeLinecap="round"/>
+      <path d="M163 379 177 370 190 377 190 395 177 404 161 397Z" fill="#A67D5B" stroke="#314339" strokeWidth="3"/>
+
+      {/* Right sleeve, forearm, glove and the device share the same hand pivot. */}
+      <path d={`M283 258Q312 265 ${elbowX} ${elbowY}Q${elbowX + 15} ${elbowY + 15} ${handX} ${handY}`}
+        fill="none" stroke="#1D3028" strokeWidth="51" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d={`M286 256Q321 278 ${elbowX} ${elbowY}L${handX} ${handY}`}
+        fill="none" stroke="#4B6658" strokeWidth="35" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d={`M${elbowX-13} ${elbowY+10}L${elbowX+13} ${elbowY-10}`} stroke="#D6DBC4" strokeWidth="10"/>
+      <g transform={`translate(${handX} ${handY})`}>
+        {/* Measuring instrument: directional probe and display, not a hand-held radio. */}
+        <g opacity={1-report} transform="rotate(-17)">
+          <path d="M-10-35 18-35 29-6 8 17-17 8Z" fill="#384C45" stroke="#101D18" strokeWidth="3"/>
+          <path d="M-13-37 46-46 55-32 22-19-8-17Z" fill="#252C27" stroke="#93ACA0" strokeWidth="3"/>
+          <rect x="0" y="-29" width="17" height="13" rx="3" fill="#96D9C7"/>
+          <path d="M4 7 6 25" stroke="#1B2B25" strokeWidth="12" strokeLinecap="round"/>
         </g>
+        {/* Compact handheld radio appears as the arm moves up to the mouth. */}
+        <g opacity={report} transform="rotate(6)">
+          <rect x="-20" y="-50" width="34" height="78" rx="8" fill="#1B2822" stroke="#A5B4A5" strokeWidth="3"/>
+          <path d="M3-50V-79" stroke="#BCC8AF" strokeWidth="6" strokeLinecap="round"/>
+          <rect x="-10" y="-37" width="16" height="11" rx="2" fill={teal}/>
+          <path d="M-10-11H5M-10-4H5M-10 3H5" stroke="#7B9B8C" strokeWidth="2"/>
+          <path d="M23-44Q36-32 23-17M32-52Q51-32 34-10"
+            fill="none" stroke={teal} strokeWidth="3" strokeLinecap="round" opacity={radioSignal}/>
+        </g>
+        <path d="M-19 1Q-14-11-2-11L19-2 24 12 13 21-8 22-23 14Z"
+          fill="#9DAA97" stroke="#304539" strokeWidth="3"/>
+        <path d="M-11 6 8 11M-11 13 8 17" stroke="#657C6C" strokeWidth="2" opacity=".7"/>
       </g>
     </g>
   );
 };
 
-const MonitoringStation: FC<{ frame: number }> = ({ frame }) => (
-  <g>
-    <path
-      d="M480 1000 564 954 621 898 680 854 745 843 807 852 856 873 902 914 974 945 1080 975V1049H480Z"
-      fill="#252824"
-      stroke="#6E624F"
-      strokeWidth="3"
-    />
-    <path
-      d="M625 899 679 855 741 845 804 853 842 870 779 866 726 878 699 904 661 930 564 955Z"
-      fill="#403C33"
-    />
-    <path
-      d="M0 1035 195 1018 448 1023 704 1013 1080 1024V1465H0Z"
-      fill="#2B3027"
-    />
-    <path
-      d="M0 1059 298 1037 704 1032 1080 1043 1080 1159 740 1136 292 1147 0 1177Z"
-      fill="#22291F"
-    />
-    <path
-      d="M0 1177 292 1147 740 1136 1080 1159"
-      fill="none"
-      stroke="#746853"
-      strokeWidth="3"
-      opacity=".46"
-    />
-    <path
-      d="M0 1009 110 1008 259 1008 434 1005M765 1005 913 1008 1080 1011M0 1039 435 1032M766 1031 1080 1039"
-      fill="none"
-      stroke="#9F8A61"
-      strokeWidth="5"
-      opacity=".65"
-    />
-    {[101, 274, 419, 790, 939].map((x) => (
-      <path
-        key={x}
-        d={`M${x} 997V1077`}
-        fill="none"
-        stroke="#786C52"
-        strokeWidth="7"
-        opacity=".78"
-      />
-    ))}
-    <path
-      d="M0 1235 189 1217 300 1214 418 1226 649 1214 1080 1211V1480H0Z"
-      fill="#32342B"
-    />
-    <path
-      d="M0 1235 189 1217 300 1214 418 1226 649 1214 1080 1211"
-      fill="none"
-      stroke="#736951"
-      strokeWidth="3"
-    />
-    <path
-      d="M30 1315 309 1294 600 1298 1080 1281M0 1353 387 1340 836 1325 1080 1332"
-      fill="none"
-      stroke="#746B53"
-      strokeWidth="3"
-      opacity=".2"
-    />
-    <MonitoringScreen frame={frame} />
-    <Worker frame={frame} />
-  </g>
-);
+const MonitoringStation: FC<{ frame: number }> = ({ frame }) => {
+  const report = interpolate(frame, [1252, 1280], [0, 1], clamp);
+  const beam = interpolate(frame, [1195, 1208, 1244, 1263], [0, 0.86, 0.78, 0], clamp);
+  const hotSpot = interpolate(frame, [1212, 1243], [0, 0.85], clamp);
+  return (
+    <g>
+      {/* Accessible stockpile face with worker-scale context. */}
+      <path d="M460 1071 505 1010 574 968 635 929 705 897 773 870 829 884 899 922 963 982 1080 1027V1158H460Z"
+        fill="url(#swabakar-work-coal)" stroke="#776653" strokeWidth="3"/>
+      <path d="M504 1012 573 970 633 928 705 897 770 870 823 883 771 901 712 933 679 984 603 1019Z" fill="#4C473C"/>
+      <path d="M701 903 773 872 830 885 902 926 952 984 850 960 785 927Z" fill="#352F29"/>
+      <path d="M0 1120 188 1103 360 1110 518 1082 743 1088 1080 1110V1500H0Z" fill="#30352C"/>
+      <path d="M0 1120 188 1103 360 1110 518 1082 743 1088 1080 1110" fill="none" stroke="#80725C" strokeWidth="4"/>
+      <path d="M0 1185 207 1160 427 1168 696 1140 1080 1175M0 1257 273 1247 531 1269 792 1243 1080 1255"
+        fill="none" stroke="#6F6852" strokeWidth="4" opacity=".48"/>
+      <path d="M0 1336 237 1322 523 1339 779 1317 1080 1333" fill="none" stroke="#6C6857" strokeWidth="3" opacity=".35"/>
+      <path d="M42 1092 96 1093 143 1091M861 1080H1080" stroke="#C5A668" strokeWidth="5" opacity=".58"/>
+      <path d="M58 1090V1150M98 1092V1146M879 1081V1144M1007 1081V1152" stroke="#A28E65" strokeWidth="7" opacity=".6"/>
+
+      {/* No numerical temperature or fake regulatory threshold is implied. */}
+      <g opacity={hotSpot}>
+        <ellipse cx="685" cy="964" rx="50" ry="27" fill={amber} opacity=".14"/>
+        <ellipse cx="685" cy="964" rx="28" ry="13" fill={amber} opacity=".22"/>
+      </g>
+      <path d="M540 1011 684 965" stroke={amber} strokeWidth="3.5"
+        strokeDasharray="10 10" strokeLinecap="round" opacity={beam*(1-report)}/>
+      <circle cx="684" cy="965" r="9" stroke={amber} fill="none" strokeWidth="3" opacity={beam*(1-report)}/>
+      <SurfaceTemperatureCard frame={frame}/>
+      <MinerWorker frame={frame}/>
+    </g>
+  );
+};
 
 export const MonitoringScenes: FC<{ frame: number }> = ({ frame }) => {
   const glide = interpolate(frame, [1138, 1170], [0, 1], {
