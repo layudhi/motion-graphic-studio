@@ -39,9 +39,10 @@ jobs:
             BROWSER_ARGS=("--browser-executable=$CHROME")
           fi
           mkdir -p gate-b-preview
-          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1200.png --frame=1200 "${BROWSER_ARGS[@]}"
-          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1254.png --frame=1254 "${BROWSER_ARGS[@]}"
-          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1297.png --frame=1297 "${BROWSER_ARGS[@]}"
+          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1137.png --frame=1137 "${BROWSER_ARGS[@]}"
+          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1185.png --frame=1185 "${BROWSER_ARGS[@]}"
+          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1216.png --frame=1216 "${BROWSER_ARGS[@]}"
+          npx remotion still src/index.ts BatubaraSwabakar gate-b-preview/frame-1237.png --frame=1237 "${BROWSER_ARGS[@]}"
           cp vo-metadata.txt gate-b-preview/vo-metadata.txt
       - name: Upload Gate B images for human review
         uses: actions/upload-artifact@v4
