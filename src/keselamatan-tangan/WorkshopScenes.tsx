@@ -1,7 +1,9 @@
 import { useId } from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { useCharacterArtwork } from "./CharacterArtwork";
 import { Artwork, glide, Keyword, rise } from "./Design";
-import { Mechanic, OpenHand, WorkArm } from "./People";
+import { RevisedRoutine } from "./karakter-revisi/Routine";
+import { Mechanic, WorkArm } from "./People";
 import { Clipboard, Dozer, ImpactTool, Workshop, Worktable } from "./Workshop";
 
 const Hatch = ({
@@ -25,8 +27,10 @@ const Hatch = ({
 export const Hook = () => {
   const frame = useCurrentFrame();
   const id = useId();
+  const { OpenHand, revised } = useCharacterArtwork();
   const reveal = rise(frame, 12, 45);
   const move = glide(frame, 0, 31);
+  const settle = revised ? glide(frame, 30, 51) : 0;
   const zoom = 1.26 - 0.26 * reveal;
 
   return (
@@ -35,9 +39,9 @@ export const Hook = () => {
         <defs>
           <Hatch id={`${id}-hatch`} />
           <linearGradient id={`${id}-arm`} x2=".95" y2="1">
-            <stop stopColor="#b86140" />
-            <stop offset=".5" stopColor="#e3955d" />
-            <stop offset="1" stopColor="#713f3d" />
+            <stop stopColor={revised ? "#37566a" : "#b86140"} />
+            <stop offset=".5" stopColor={revised ? "#658092" : "#e3955d"} />
+            <stop offset="1" stopColor={revised ? "#254358" : "#713f3d"} />
           </linearGradient>
           <radialGradient id={`${id}-wool`} cx=".15" cy=".85" r=".95">
             <stop stopColor="#0b1a2b" stopOpacity=".52" />
@@ -92,7 +96,7 @@ export const Hook = () => {
             />
           </g>
           <g
-            transform={`translate(${234 + 100 * move} ${1237 - 75 * move}) rotate(${-18 + move * 11})`}
+            transform={`translate(${234 + 100 * move - 5 * settle} ${1237 - 75 * move + 8 * settle}) rotate(${-18 + move * 11 + 3 * settle})`}
           >
             <path
               d="M-515-169Q-345-151-166-94L22-48 41 21 21 64-175 85Q-392 134-532 151Z"
@@ -113,7 +117,7 @@ export const Hook = () => {
             <path
               d="M-268-112Q-151-69-36-44M-279 52Q-157 35-32 23"
               fill="none"
-              stroke="#774b42"
+              stroke={revised ? "#45637a" : "#774b42"}
               strokeWidth="5"
               opacity=".45"
             />
@@ -138,6 +142,11 @@ export const Hook = () => {
 };
 
 export const Routine = () => {
+  const { revised } = useCharacterArtwork();
+  return revised ? <RevisedRoutine /> : <OriginalRoutine />;
+};
+
+const OriginalRoutine = () => {
   const frame = useCurrentFrame();
   const id = useId();
   const move = glide(frame, 15, 205);
@@ -204,6 +213,7 @@ export const Routine = () => {
 export const PinchPoint = () => {
   const frame = useCurrentFrame();
   const id = useId();
+  const { OpenHand, revised } = useCharacterArtwork();
   const trackIn = glide(frame, 0, 145);
   const ghost = rise(frame, 121, 164);
   const identify = rise(frame, 211, 232);
@@ -371,7 +381,7 @@ export const PinchPoint = () => {
           >
             <path
               d="M-579-86-182-70 20-49 36 32-154 87-569 156Z"
-              fill="#c47146"
+              fill={revised ? "#527386" : "#c47146"}
               stroke="#132a3a"
               strokeWidth="9"
             />

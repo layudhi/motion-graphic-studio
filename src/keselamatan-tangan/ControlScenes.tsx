@@ -1,11 +1,12 @@
 import { useId } from "react";
 import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
+import { useCharacterArtwork } from "./CharacterArtwork";
 import { Artwork, glide, Keyword, palette, rise } from "./Design";
-import { ClosedGlove, Mechanic, OpenHand, WorkArm } from "./People";
 import { Clipboard, Dozer, Workshop, Worktable } from "./Workshop";
 
 const AtTheBench = () => {
   const frame = useCurrentFrame();
+  const { Mechanic, WorkArm, revised } = useCharacterArtwork();
   const settle = glide(frame, 3, 56);
 
   return (
@@ -33,14 +34,14 @@ const AtTheBench = () => {
         kind="sop"
       />
       <WorkArm
-        shoulder={[314, 853]}
+        shoulder={revised ? [312, 836] : [314, 853]}
         elbow={[386, 1014]}
         wrist={[407 + 20 * settle, 1121]}
         width={80}
         handAngle={73 - 15 * settle}
       />
       <WorkArm
-        shoulder={[737, 872]}
+        shoulder={revised ? [728, 847] : [737, 872]}
         elbow={[714, 1016]}
         wrist={[684 - 12 * settle, 1124]}
         width={75}
@@ -53,6 +54,7 @@ const AtTheBench = () => {
 const ReadThePlan = () => {
   const frame = useCurrentFrame();
   const id = useId();
+  const { OpenHand, revised } = useCharacterArtwork();
   const reach = glide(frame, 4, 29);
   const transfer = glide(frame, 66, 91);
   const hazard = rise(frame, 122, 146);
@@ -160,7 +162,7 @@ const ReadThePlan = () => {
         >
           <path
             d="M-890-84-120-55 11-45 29 31-119 57-890 126Z"
-            fill="#c27449"
+            fill={revised ? "#526f81" : "#c27449"}
             stroke="#263f50"
             strokeWidth="8"
           />
@@ -171,7 +173,7 @@ const ReadThePlan = () => {
             stroke="#263f50"
             strokeWidth="4"
           />
-          <OpenHand transform="translate(10 0) scale(.91)" />
+          <OpenHand transform="translate(10 0) scale(.91)" gesture="point" />
         </g>
       </Artwork>
       <Keyword
@@ -408,13 +410,14 @@ export const JsaReview = () => (
 export const SafeWork = () => {
   const frame = useCurrentFrame();
   const id = useId();
+  const { ClosedGlove, Mechanic, WorkArm, revised } = useCharacterArtwork();
   const settle = glide(frame, 2, 49);
   const action =
     glide(frame, 43, 66) -
     glide(frame, 72, 94) +
     glide(frame, 101, 122) -
     glide(frame, 130, 157);
-  const angle = -5 + 10 * action;
+  const angle = -5 + (revised ? 12 : 10) * action;
   const radians = (angle * Math.PI) / 180;
   const wristX = 744 - 306 * Math.cos(radians) - 180 * Math.sin(radians);
   const wristY = 1117 - 306 * Math.sin(radians) + 180 * Math.cos(radians);

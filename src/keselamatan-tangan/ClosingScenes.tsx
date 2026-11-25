@@ -1,12 +1,13 @@
 import { useId } from "react";
 import { AbsoluteFill, Sequence, useCurrentFrame } from "remotion";
+import { useCharacterArtwork } from "./CharacterArtwork";
 import { Artwork, glide, Keyword, palette, rise } from "./Design";
 import { Family, Porch } from "./Home";
-import { OpenHand } from "./People";
 import { Clipboard, Workshop, Worktable } from "./Workshop";
 
 const AfterShift = () => {
   const frame = useCurrentFrame();
+  const { OpenHand } = useCharacterArtwork();
   const lower = glide(frame, 0, 90);
   const reach = glide(frame, 114, 204);
   const x = 366 + 151 * reach;
@@ -49,6 +50,7 @@ const AfterShift = () => {
       />
       <OpenHand
         transform={`translate(${509 + 35 * lower} ${1066 + 198 * lower}) rotate(${40 - lower * 51}) scale(.88)`}
+        gesture="rest"
       />
       <g transform={`translate(${x} ${y}) rotate(${-3 + reach * 11})`}>
         <path
@@ -66,7 +68,7 @@ const AfterShift = () => {
           fill="none"
         />
         <path d="M-32-35-6-39 6 32-29 41Z" fill="#335563" />
-        <OpenHand transform="scale(.72)" bare />
+        <OpenHand transform="scale(.72)" bare gesture="rest" />
       </g>
     </Artwork>
   );
@@ -126,6 +128,7 @@ export const SameHands = () => (
 export const ComeHomeSafe = () => {
   const frame = useCurrentFrame();
   const id = useId();
+  const { OpenHand, revised } = useCharacterArtwork();
   const pull = glide(frame, 0, 151);
   const nextTitle = 203;
   const isClosing = frame >= nextTitle;
@@ -159,12 +162,12 @@ export const ComeHomeSafe = () => {
           <g transform="translate(160 1440) rotate(-62)">
             <path
               d="M-394-34-89-38 10-36 14 30-98 55-395 82Z"
-              fill="#be714b"
+              fill={revised ? "#526f81" : "#be714b"}
               stroke="#213b4c"
               strokeWidth="7"
             />
             <path d="M-95-37-64-38-60 49-90 55Z" fill="#c4d8cc" />
-            <OpenHand transform="translate(4 0) scale(.73)" />
+            <OpenHand transform="translate(4 0) scale(.73)" gesture="point" />
           </g>
         </g>
         <path
