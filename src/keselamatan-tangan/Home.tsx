@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { CrewHead, OpenHand, skin } from "./People";
+import { useCharacterArtwork } from "./CharacterArtwork";
+import { skin } from "./People";
 
 export const Porch = () => {
   const id = useId();
@@ -97,7 +98,21 @@ export const Porch = () => {
 
 export const matchHand = "translate(517 1114) rotate(8) scale(.72)";
 
-export const Family = ({ transform }: { readonly transform?: string }) => (
+export const Family = ({ transform }: { readonly transform?: string }) => {
+  const { CrewHead, OpenHand } = useCharacterArtwork();
+  return (
+    <FamilyPose transform={transform} CrewHead={CrewHead} OpenHand={OpenHand} />
+  );
+};
+
+type FamilyPoseProps = Pick<
+  ReturnType<typeof useCharacterArtwork>,
+  "CrewHead" | "OpenHand"
+> & {
+  readonly transform?: string;
+};
+
+const FamilyPose = ({ transform, CrewHead, OpenHand }: FamilyPoseProps) => (
   <g transform={transform}>
     <ellipse cx="493" cy="1647" rx="357" ry="34" fill="#493942" opacity=".43" />
     <path
@@ -278,7 +293,7 @@ export const Family = ({ transform }: { readonly transform?: string }) => (
       strokeLinecap="round"
       opacity=".75"
     />
-    <OpenHand transform={matchHand} bare />
+    <OpenHand transform={matchHand} bare gesture="rest" />
     <path
       d="M539 1450Q583 1481 621 1472M688 1473Q729 1471 755 1440"
       fill="none"

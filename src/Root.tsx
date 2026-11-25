@@ -2,6 +2,7 @@ import { Composition } from "remotion";
 import { MyComposition } from "./Composition";
 import { MiningSafetyDemo } from "./MiningSafetyDemo";
 import { KeselamatanTangan } from "./keselamatan-tangan/KeselamatanTangan";
+import { KeselamatanTanganRevisiKarakter } from "./keselamatan-tangan/KeselamatanTanganRevisiKarakter";
 import {
   BatubaraSwabakar,
   batubaraSwabakarSchema,
@@ -32,6 +33,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="KeselamatanTangan"
         component={KeselamatanTangan}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={1980}
+      />
+      <Composition
+        id="KeselamatanTanganRevisiKarakter"
+        component={KeselamatanTanganRevisiKarakter}
         width={1080}
         height={1920}
         fps={30}
