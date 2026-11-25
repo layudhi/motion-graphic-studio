@@ -1,6 +1,7 @@
 import { Composition } from "remotion";
 import { MyComposition } from "./Composition";
 import { MiningSafetyDemo } from "./MiningSafetyDemo";
+import { KeselamatanTangan } from "./keselamatan-tangan/KeselamatanTangan";
 import {
   BatubaraSwabakar,
   batubaraSwabakarSchema,
@@ -27,6 +28,14 @@ export const RemotionRoot: React.FC = () => {
         durationInFrames={1241}
         schema={batubaraSwabakarSchema}
         defaultProps={{ showSubtitles: false }}
+      />
+      <Composition
+        id="KeselamatanTangan"
+        component={KeselamatanTangan}
+        width={1080}
+        height={1920}
+        fps={30}
+        durationInFrames={1980}
       />
     </>
   );
