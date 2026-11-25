@@ -13,6 +13,8 @@ Storyboard disetujui untuk Gate B. Tujuh Sequence memakai batas frame 0, 90, 336
 | `out/keselamatan-tangan-gate-b/stills/` | 42 PNG dengan resolusi komposisi. Frame 1872 merupakan kandidat sampul. |
 | `out/keselamatan-tangan-gate-b/ponsel/` | Gambar yang sama pada 360 × 640 untuk memeriksa keterbacaan. |
 
+Salinan klip, contact sheet, dan seluruh frame untuk tinjauan di GitHub tersedia di [paket pratinjau Gate B](../../deliverables/keselamatan-tangan-gate-b/README.md).
+
 Remotion Studio menampilkan komposisi dan kedua jalur audio. CLI menggunakan Chromium lokal 156.0.8078.79 setelah unduhan Chrome Headless Shell gagal. Paket `@remotion/fonts` yang tercatat dalam lockfile dipulihkan ke instalasi lokal. Font Barlow Condensed memakai aset OFL yang sudah tersedia di repositori.
 
 ## Pemeriksaan visual
